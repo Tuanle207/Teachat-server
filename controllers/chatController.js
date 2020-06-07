@@ -40,7 +40,7 @@ const findLastestMessages = async (res, chats) =>  {
 
     res.status(200).json({
         status: 'success',
-        chats: chats.sort(compareDate)
+        data: chats.sort(compareDate)
     });
 };
 exports.createChat = catchAsync(async (req, res, next) => {
@@ -62,11 +62,13 @@ exports.createChat = catchAsync(async (req, res, next) => {
     }
     // Create a new chat
     const newChat = new Chat({ participants: [userId, friendId] });
-    const chat = await Chat.create(newChat);
+    newChat.latestMessage = undefined;
+    await Chat.create(newChat);
+    const chat = await Chat.findAndPopulate(Chat.findById(newChat._id));
 
     res.status(201).json({
         status: 'success',
-        chat
+        data: chat
     });
 });
 

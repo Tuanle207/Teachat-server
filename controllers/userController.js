@@ -143,3 +143,92 @@ exports.getFriendRequests = catchAsync(async (req, res, next) => {
         data: friendRequests
     });
 });
+
+exports.acceptFriendRequest = catchAsync(async (req, res, next) => {
+    const userId = req.user._id;
+    const {requestId} = req.body;
+    // Check if there is a friend request id in request.
+    if (!requestId) {
+        return next(new AppError('No friend request id provided!', 400));
+    }
+    const friendRequest = await FriendRequest.findById(requestId);
+    
+    // Check if there is friend request with that id available in DB?
+    if (!friendRequest) {
+        return next(new AppError(`Friend request with the id ${requestId} is not found!`), 404);
+    }
+
+    // Check if the user and the friend have already been friend?
+    const user = await User.findById(userId);
+    if (user.friends.includes(friendRequest.from._id)) {
+        return next(new AppError('You both have already been friend before!', 400));
+    }
+    const friend = await User.findById(friendRequest.from._id);
+
+    // Check if friend is still existing
+    if (!friend) {
+        await FriendRequest.findByIdAndDelete(requestId);
+        return next(new AppError('User has sent friend request is no longer existing!', 404));
+    }
+
+    // Finally add each other to friend list.
+    user.friends.push(friend._id);
+    friend.friends.push(user._id);
+    await user.save();
+    await friend.save();
+
+    // Delete friend request from DB
+    await FriendRequest.findByIdAndDelete(requestId);
+
+    res.status(200).json({
+        status: 'success',
+        data: friend._id
+    });
+});
+
+exports.removeFriendRequest = catchAsync(async (req, res, next) => {
+    const {requestId} = req.body;
+    // Check if there is a friend request id in request.
+    if (!requestId) {
+        return next(new AppError('No friend request id provided!', 400));
+    }
+    const friendRequest = await FriendRequest.findById(requestId);
+    
+    // Check if there is friend request with that id available in DB?
+    if (!friendRequest) {
+        return next(new AppError(`Friend request with the id ${requestId} is not found!`), 404);
+    }
+
+    // Delete friend request from DB
+    await FriendRequest.findByIdAndDelete(requestId);
+
+    res.status(204).json({
+        status: 'success',
+        data: null
+    });
+});
+
+exports.unfriend = catchAsync(async (req, res, next) => {
+    if (!req.body.friendId) {
+        return next(new AppError('No friend id provided!', 400));
+    }
+    const {friendId} = req.body;
+    // Delete friend id from user's friends and the same in reverse
+    const user = await User.findById(req.user._id);
+    const friend = await User.findById(friendId);
+    if (!friend) {
+        return next(new AppError('The person is no longer existing!', 404));
+    }
+    const userIndex = friend.friends.indexOf(req.user._id);
+    const friendIndex = user.friends.indexOf(friendId);
+    if (friendIndex <= -1 || userIndex <= -1) {
+        return next(new AppError('You and this person are not friends!', 400));
+    }
+    await user.friends.splice(friendIndex, 1);
+    await friend.friends.splice(userIndex, 1);
+
+    res.status(200).json({
+        status: 'success',
+        data: null
+    });
+});

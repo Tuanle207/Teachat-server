@@ -18,8 +18,11 @@ userRouter.get('/', authController.protect, userController.getAllUsers);
 userRouter.post('/addFriend', authController.protect, userController.addFriend);
 userRouter.get('/friends', authController.protect, userController.getFriendsList);
 userRouter.get('/searchFriends', authController.protect, userController.searchFriends);
+userRouter.patch('/unfriend', authController.protect, userController.unfriend);
 userRouter.post('/friendRequest', authController.protect, userController.sendFriendRequest);
 userRouter.get('/friendRequest', authController.protect, userController.getFriendRequests);
+userRouter.patch('/friendRequest', authController.protect, userController.acceptFriendRequest);
+userRouter.delete('/friendRequest', authController.protect, userController.removeFriendRequest);
 // userRouter.get('/:nickName', userController.getUser);
 userRouter.post('/', userController.createUser);
 // Not implemented yet
