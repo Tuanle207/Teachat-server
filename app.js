@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const socketio = require('socket.io');
 const http = require('http');
@@ -26,16 +27,19 @@ app.use(express.static('public'));
 io.on('connection', socketioController(io));
 
 // ROUTES middleware
-app.get('/', (req, res) => {
-    res.status(200).send('Server is running...!');
-});
 
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/chats', chatRoutes);
 app.use('/api/v1/messages', messageRoutes);
 
-app.use('*', (req, res, next) => {
-    next(new AppError("This url doesn't exist!, 404"));
+
+app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'build')));
+app.get('/ping', function (req, res) {
+ return res.send('pong');
+});
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // Error handling middleware

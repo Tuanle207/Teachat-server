@@ -2,6 +2,7 @@ const User = require('../models/userModel');
 const FriendRequest = require('../models/friendRequestModel');
 const AppError = require('../utilities/AppError');
 const catchAsync = require('../utilities/catchAsync');
+const mongoose = require('mongoose');
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {
     const users = await User.find();
@@ -187,13 +188,12 @@ exports.acceptFriendRequest = catchAsync(async (req, res, next) => {
 });
 
 exports.removeFriendRequest = catchAsync(async (req, res, next) => {
-    const {requestId} = req.body;
+    const {requestId} = req.params;
     // Check if there is a friend request id in request.
     if (!requestId) {
         return next(new AppError('No friend request id provided!', 400));
     }
     const friendRequest = await FriendRequest.findById(requestId);
-    
     // Check if there is friend request with that id available in DB?
     if (!friendRequest) {
         return next(new AppError(`Friend request with the id ${requestId} is not found!`), 404);
@@ -209,10 +209,10 @@ exports.removeFriendRequest = catchAsync(async (req, res, next) => {
 });
 
 exports.unfriend = catchAsync(async (req, res, next) => {
-    if (!req.body.friendId) {
+    const {friendId} = req.body;
+    if (!friendId) {
         return next(new AppError('No friend id provided!', 400));
     }
-    const {friendId} = req.body;
     // Delete friend id from user's friends and the same in reverse
     const user = await User.findById(req.user._id);
     const friend = await User.findById(friendId);
@@ -224,11 +224,22 @@ exports.unfriend = catchAsync(async (req, res, next) => {
     if (friendIndex <= -1 || userIndex <= -1) {
         return next(new AppError('You and this person are not friends!', 400));
     }
-    await user.friends.splice(friendIndex, 1);
-    await friend.friends.splice(userIndex, 1);
+    user.friends.splice(friendIndex, 1);
+    friend.friends.splice(userIndex, 1);
+    await user.save();
+    await friend.save();
 
     res.status(200).json({
         status: 'success',
         data: null
+    });
+});
+
+exports.createId = catchAsync(async (req, res, next) => {
+    res.status(200).json({
+        status: 'success',
+        data: {
+            id: new mongoose.Types.ObjectId()
+        }
     });
 });

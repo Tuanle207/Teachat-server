@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const messageSchema = new mongoose.Schema({
-    _id: mongoose.Types.ObjectId,
     chat: {
         type: mongoose.Types.ObjectId,
         required: [true, 'A message must be included in a chat']
@@ -19,15 +18,6 @@ const messageSchema = new mongoose.Schema({
         default: Date.now()
     }
 });
-
-
-
-messageSchema.statics.createMongodbId = function(id) {
-    if (id) {
-        return new mongoose.Types.ObjectId(id);
-    }
-    return new mongoose.Types.ObjectId();
-}
 
 const Message = mongoose.model('Message', messageSchema);
 module.exports = Message;

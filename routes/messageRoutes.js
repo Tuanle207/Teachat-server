@@ -3,11 +3,6 @@ const messageController = require('../controllers/messageController');
 const authController = require('../controllers/authController');
 
 
-messageRouter.get(
-    '/get-unique-id',
-    authController.protect,
-    messageController.createMessageId
-);
 
 messageRouter.get(
     '/:chatId',

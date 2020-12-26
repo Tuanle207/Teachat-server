@@ -22,7 +22,8 @@ userRouter.patch('/unfriend', authController.protect, userController.unfriend);
 userRouter.post('/friendRequest', authController.protect, userController.sendFriendRequest);
 userRouter.get('/friendRequest', authController.protect, userController.getFriendRequests);
 userRouter.patch('/friendRequest', authController.protect, userController.acceptFriendRequest);
-userRouter.delete('/friendRequest', authController.protect, userController.removeFriendRequest);
+userRouter.delete('/friendRequest/:requestId', authController.protect, userController.removeFriendRequest);
+userRouter.get('/create-unique-id', authController.protect, userController.createId);
 // userRouter.get('/:nickName', userController.getUser);
 userRouter.post('/', userController.createUser);
 // Not implemented yet
