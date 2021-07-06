@@ -1,7 +1,7 @@
 const User = require('../models/userModel');
 const FriendRequest = require('../models/friendRequestModel');
-const AppError = require('../utilities/AppError');
-const catchAsync = require('../utilities/catchAsync');
+const AppError = require('../ultis/AppError');
+const catchAsync = require('../ultis/catchAsync');
 const mongoose = require('mongoose');
 
 exports.getAllUsers = catchAsync(async (req, res, next) => {

@@ -10,7 +10,7 @@ const chatRoutes = require('./routes/chatRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const globalErrorHandler = require('./controllers/errorController');
 const socketioController = require('./controllers/socketioController');
-const AppError = require('./utilities/AppError');
+const AppError = require('./ultis/AppError');
 
 const app = express();
 const server = http.createServer(app);

@@ -1,5 +1,5 @@
-const catchAsync = require('../utilities/catchAsync');
-const AppError = require('../utilities/AppError');
+const catchAsync = require('../ultis/catchAsync');
+const AppError = require('../ultis/AppError');
 const Message = require('../models/messageModel');
 
 exports.getMessages = catchAsync(async (req, res, next) => {

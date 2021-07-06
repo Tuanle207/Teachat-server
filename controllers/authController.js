@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-const catchAsync = require('../utilities/catchAsync');
-const AppError = require('../utilities/AppError');
+const catchAsync = require('../ultis/catchAsync');
+const AppError = require('../ultis/AppError');
 const User = require('../models/userModel');
 
 
@@ -8,7 +8,7 @@ const User = require('../models/userModel');
 const signToken = id =>
     jwt.sign(
         {
-            id: id || 'logout-code'
+            id: id || 'logout-code-10032000000000000000000000000'
         },
         process.env.JWT_SECRET,
         { algorithm: 'HS256', expiresIn: process.env.JWT_EXPIRES }

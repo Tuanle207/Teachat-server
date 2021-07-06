@@ -5,14 +5,14 @@ dotenv.config({ path: './config.env' }); // Config environment variables of proc
 
 // Connect database
 let DB = 'mongodb://localhost:27017/teachat';
-// if (process.env.NODE_ENV === 'production') {
-//     DB = process.env.DATABASE.replace(
-//         '<password>',
-//         process.env.DATABASE_PASSWORD
-//     );
-// } else if (process.env.NODE_ENV === 'development') {
-//     DB = 'mongodb://localhost:27017/teachat';
-// }
+if (process.env.NODE_ENV === 'production') {
+    DB = process.env.DATABASE.replace(
+        '<password>',
+        process.env.DATABASE_PASSWORD
+    );
+} else if (process.env.NODE_ENV === 'development') {
+    DB = 'mongodb://localhost:27017/teachat';
+}
 mongoose
     .connect(DB, {
         useNewUrlParser: true,

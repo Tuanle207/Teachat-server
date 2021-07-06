@@ -37,7 +37,7 @@ const sendErrorPro = (err, req, res) => {
     }
 };
 
-module.exports = (err, req, res, next) => {
+const sendError = (err, req, res, next) => {
     console.log(err);
     err.statusCode = err.statusCode || 500; //internal server error
     err.status = err.status || 'error';
@@ -48,3 +48,5 @@ module.exports = (err, req, res, next) => {
         sendErrorPro(err, req, res);
     }
 };
+
+module.exports = sendError; 

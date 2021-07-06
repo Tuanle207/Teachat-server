@@ -1,5 +1,5 @@
-const catchAsync = require('../utilities/catchAsync');
-const AppError = require('../utilities/AppError');
+const catchAsync = require('../ultis/catchAsync');
+const AppError = require('../ultis/AppError');
 const Chat = require('../models/chatModel');
 const User = require('../models/userModel');
 const Message = require('../models/messageModel');
