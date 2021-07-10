@@ -236,10 +236,27 @@ exports.unfriend = catchAsync(async (req, res, next) => {
 });
 
 exports.createId = catchAsync(async (req, res, next) => {
+
     res.status(200).json({
         status: 'success',
         data: {
             id: new mongoose.Types.ObjectId()
+        }
+    });
+});
+
+exports.uploadAvatar = catchAsync(async (req, res, next) => {
+    const avartarUrl = `/img/user/${req.file.filename}`;
+    const user = await User.findById(req.user._id);
+    console.log(user);
+    user.photo = avartarUrl;
+    console.log(user);
+    await user.save();
+    console.log('saved');
+    res.status(200).json({
+        status: 'success',
+        data: {
+            url: avartarUrl
         }
     });
 });

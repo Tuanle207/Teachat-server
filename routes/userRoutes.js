@@ -1,6 +1,7 @@
 const userRouter = require('express').Router();
 const userController = require('../controllers/userController');
 const authController = require('../controllers/authController');
+const multer = require('../configs/multer');
 
 // Authentification
 userRouter.post('/login', authController.login);
@@ -24,6 +25,12 @@ userRouter.get('/friendRequest', authController.protect, userController.getFrien
 userRouter.patch('/friendRequest', authController.protect, userController.acceptFriendRequest);
 userRouter.delete('/friendRequest/:requestId', authController.protect, userController.removeFriendRequest);
 userRouter.get('/create-unique-id', authController.protect, userController.createId);
+userRouter.post('/updateAvatar', 
+  authController.protect, 
+  multer.avatarUpload.single('avatar'), 
+  userController.uploadAvatar
+);
+
 // userRouter.get('/:nickName', userController.getUser);
 userRouter.post('/', userController.createUser);
 // Not implemented yet

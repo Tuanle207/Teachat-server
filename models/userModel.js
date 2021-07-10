@@ -15,6 +15,10 @@ const userSchema = new mongoose.Schema({
         require: [true, 'A user must have a nickNama'],
         unique: true
     },
+    photo: {
+        type: String,
+        default: '/img/user.jpg'
+    },
     name: {
         type: String,
         required: [true, 'A user must have a name']
@@ -78,7 +82,7 @@ userSchema.pre('save', function(next) {
     next();
 });
 userSchema.pre(/^find/, function(next) {
-    this.select('email nickName name friends createAt');
+    this.select('email nickName name photo friends createAt');
     next();
 });
 
